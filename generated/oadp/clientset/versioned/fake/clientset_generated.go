@@ -80,6 +80,6 @@ var (
 )
 
 // V1alpha1 retrieves the V1alpha1Client
-func (c *Clientset) V1alpha1() v1alpha1.V1alpha1Interface {
+func (c *Clientset) OadpV1alpha1() v1alpha1.OadpV1alpha1Interface {
 	return &fakev1alpha1.FakeV1alpha1{Fake: &c.Fake}
 }

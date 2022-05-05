@@ -57,7 +57,7 @@ type dataProtectionApplications struct {
 }
 
 // newDataProtectionApplications returns a DataProtectionApplications
-func newDataProtectionApplications(c *V1alpha1Client, namespace string) *dataProtectionApplications {
+func newDataProtectionApplications(c *OadpV1alpha1Client, namespace string) *dataProtectionApplications {
 	return &dataProtectionApplications{
 		client: c.RESTClient(),
 		ns:     namespace,
