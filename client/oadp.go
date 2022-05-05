@@ -1,6 +1,8 @@
 package client
 
 import (
+	"sync"
+
 	snapshotclientset "github.com/kubernetes-csi/external-snapshotter/client/v6/clientset/versioned"
 	oadpv1alpha1 "github.com/mperetzred/oadp-client-go/generated/oadp/clientset/versioned/typed/v1alpha1"
 	velerov1 "github.com/mperetzred/oadp-client-go/generated/velero/clientset/versioned"
@@ -12,6 +14,9 @@ import (
 	"k8s.io/client-go/rest"
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
 )
+
+var once sync.Once
+var oadpclient OadpClient
 
 type OadpClient interface {
 	VeleroClient() velerov1.Interface
@@ -25,7 +30,6 @@ type OadpClient interface {
 }
 
 type oadp struct {
-	kubeconfig      string
 	config          *rest.Config
 	configv1Client  *configv1.Clientset
 	secClient       *secv1.SecurityV1Client
@@ -61,51 +65,50 @@ func (o oadp) OperatorClient() operators.Interface {
 	return o.operatorsClient
 }
 
-func GetOadpSubresourceClient(master string, kubeconfig string) (OadpClient, error) {
-	restConfig := config.GetConfigOrDie()
-	coreClient, err := kubernetes.NewForConfig(restConfig)
+func GetOadpClientFromRESTConfig(config *rest.Config) (OadpClient, error) {
+	restConfig := *config //config.GetConfigOrDie()
+	coreClient, err := kubernetes.NewForConfig(&restConfig)
 	if err != nil {
 		return nil, err
 	}
 
-	configClient, err := configv1.NewForConfig(restConfig)
+	configClient, err := configv1.NewForConfig(&restConfig)
 	if err != nil {
 		return nil, err
 	}
 
-	secClient, err := secv1.NewForConfig(restConfig)
+	secClient, err := secv1.NewForConfig(&restConfig)
 	if err != nil {
 		return nil, err
 	}
 
-	appsClient, err := appsv1.NewForConfig(restConfig)
+	appsClient, err := appsv1.NewForConfig(&restConfig)
 	if err != nil {
 		return nil, err
 	}
 
-	veleroClient, err := velerov1.NewForConfig(restConfig)
+	veleroClient, err := velerov1.NewForConfig(&restConfig)
 	if err != nil {
 		return nil, err
 	}
 
-	snapshotClient, err := snapshotclientset.NewForConfig(restConfig)
+	snapshotClient, err := snapshotclientset.NewForConfig(&restConfig)
 	if err != nil {
 		return nil, err
 	}
 
-	oadpClient, err := oadpv1alpha1.NewForConfig(restConfig)
+	oadpv1apha1Client, err := oadpv1alpha1.NewForConfig(&restConfig)
 	if err != nil {
 		return nil, err
 	}
 
-	operatorsClient, err := operators.NewForConfig(restConfig)
+	operatorsClient, err := operators.NewForConfig(&restConfig)
 	if err != nil {
 		return nil, err
 	}
 
 	return &oadp{
-		kubeconfig,
-		restConfig,
+		&restConfig,
 		configClient,
 		secClient,
 		appsClient,
@@ -113,6 +116,14 @@ func GetOadpSubresourceClient(master string, kubeconfig string) (OadpClient, err
 		snapshotClient,
 		operatorsClient,
 		coreClient,
-		oadpClient,
+		oadpv1apha1Client,
 	}, nil
+}
+
+func GetOadpClient() (OadpClient, error) {
+	var err error
+	once.Do(func() {
+		oadpclient, err = GetOadpClientFromRESTConfig(config.GetConfigOrDie())
+	})
+	return oadpclient, err
 }
