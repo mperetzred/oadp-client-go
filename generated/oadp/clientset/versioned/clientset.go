@@ -30,18 +30,18 @@ import (
 
 type Interface interface {
 	Discovery() discovery.DiscoveryInterface
-	V1alpha1() v1alpha1.V1alpha1Interface
+	OadpV1alpha1() v1alpha1.OadpV1alpha1Interface
 }
 
 // Clientset contains the clients for groups. Each group has exactly one
 // version included in a Clientset.
 type Clientset struct {
 	*discovery.DiscoveryClient
-	oadpV1alpha1 *v1alpha1.V1alpha1Client
+	oadpV1alpha1 *v1alpha1.OadpV1alpha1Client
 }
 
 // V1alpha1 retrieves the V1alpha1Client
-func (c *Clientset) V1alpha1() v1alpha1.V1alpha1Interface {
+func (c *Clientset) OadpV1alpha1() v1alpha1.OadpV1alpha1Interface {
 	return c.oadpV1alpha1
 }
 

@@ -26,24 +26,24 @@ import (
 	rest "k8s.io/client-go/rest"
 )
 
-type V1alpha1Interface interface {
+type OadpV1alpha1Interface interface {
 	RESTClient() rest.Interface
 	DataProtectionApplicationsGetter
 }
 
 // V1alpha1Client is used to interact with features provided by the  group.
-type V1alpha1Client struct {
+type OadpV1alpha1Client struct {
 	restClient rest.Interface
 }
 
-func (c *V1alpha1Client) DataProtectionApplications(namespace string) DataProtectionApplicationInterface {
+func (c *OadpV1alpha1Client) DataProtectionApplications(namespace string) DataProtectionApplicationInterface {
 	return newDataProtectionApplications(c, namespace)
 }
 
 // NewForConfig creates a new V1alpha1Client for the given config.
 // NewForConfig is equivalent to NewForConfigAndClient(c, httpClient),
 // where httpClient was generated with rest.HTTPClientFor(c).
-func NewForConfig(c *rest.Config) (*V1alpha1Client, error) {
+func NewForConfig(c *rest.Config) (*OadpV1alpha1Client, error) {
 	config := *c
 	if err := setConfigDefaults(&config); err != nil {
 		return nil, err
@@ -57,7 +57,7 @@ func NewForConfig(c *rest.Config) (*V1alpha1Client, error) {
 
 // NewForConfigAndClient creates a new V1alpha1Client for the given config and http client.
 // Note the http client provided takes precedence over the configured transport values.
-func NewForConfigAndClient(c *rest.Config, h *http.Client) (*V1alpha1Client, error) {
+func NewForConfigAndClient(c *rest.Config, h *http.Client) (*OadpV1alpha1Client, error) {
 	config := *c
 	if err := setConfigDefaults(&config); err != nil {
 		return nil, err
@@ -66,12 +66,12 @@ func NewForConfigAndClient(c *rest.Config, h *http.Client) (*V1alpha1Client, err
 	if err != nil {
 		return nil, err
 	}
-	return &V1alpha1Client{client}, nil
+	return &OadpV1alpha1Client{client}, nil
 }
 
 // NewForConfigOrDie creates a new V1alpha1Client for the given config and
 // panics if there is an error in the config.
-func NewForConfigOrDie(c *rest.Config) *V1alpha1Client {
+func NewForConfigOrDie(c *rest.Config) *OadpV1alpha1Client {
 	client, err := NewForConfig(c)
 	if err != nil {
 		panic(err)
@@ -80,12 +80,12 @@ func NewForConfigOrDie(c *rest.Config) *V1alpha1Client {
 }
 
 // New creates a new V1alpha1Client for the given RESTClient.
-func New(c rest.Interface) *V1alpha1Client {
-	return &V1alpha1Client{c}
+func New(c rest.Interface) *OadpV1alpha1Client {
+	return &OadpV1alpha1Client{c}
 }
 
 func setConfigDefaults(config *rest.Config) error {
-	gv := v1alpha1.SchemeGroupVersion
+	gv := v1alpha1.GroupVersion
 	config.GroupVersion = &gv
 	config.APIPath = "/apis"
 	config.NegotiatedSerializer = scheme.Codecs.WithoutConversion()
@@ -99,7 +99,7 @@ func setConfigDefaults(config *rest.Config) error {
 
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
-func (c *V1alpha1Client) RESTClient() rest.Interface {
+func (c *OadpV1alpha1Client) RESTClient() rest.Interface {
 	if c == nil {
 		return nil
 	}
