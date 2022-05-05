@@ -21,6 +21,7 @@ type OadpClient interface {
 	SecClient() secv1.SecurityV1Interface
 	OperatorClient() operators.Interface
 	kubernetes.Interface
+	oadpv1alpha1.OadpV1alpha1Interface
 }
 
 type oadp struct {
