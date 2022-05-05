@@ -7,7 +7,7 @@ require k8s.io/client-go v0.23.6
 require (
 	github.com/kubernetes-csi/external-snapshotter/client/v6 v6.0.0-rc4
 	github.com/openshift/client-go v0.0.0-20211209144617-7385dd6338e3
-	github.com/openshift/oadp-operator v1.0.1
+	github.com/openshift/oadp-operator v0.3.1-0.20220303202209-c5293b18ecf6
 	github.com/operator-framework/operator-lifecycle-manager v0.21.1
 	github.com/vmware-tanzu/velero v1.8.1
 	k8s.io/apimachinery v0.23.6
@@ -43,7 +43,6 @@ require (
 	golang.org/x/time v0.0.0-20210723032227-1f47c861a9ac // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
-	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
