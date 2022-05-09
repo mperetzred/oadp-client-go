@@ -9,6 +9,10 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 )
 
+type VolumeSnapshotClassGetter interface {
+	VolumeSnapshotClass() VeleroVolumeSnapshotClassInterface
+}
+
 type VeleroVolumeSnapshotClassInterface interface {
 	Create(name string, driver string, parameters map[string]string) (*v1.VolumeSnapshotClass, error)
 }

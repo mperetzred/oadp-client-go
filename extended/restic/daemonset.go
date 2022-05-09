@@ -8,6 +8,10 @@ import (
 	appsv1client "k8s.io/client-go/kubernetes/typed/apps/v1"
 )
 
+type DaemonSetsGetter interface {
+	DaemonSets(namespace string) ResticDaemonSetInterface
+}
+
 type ResticDaemonSetInterface interface {
 	Get() (*appsv1.DaemonSet, error)
 }

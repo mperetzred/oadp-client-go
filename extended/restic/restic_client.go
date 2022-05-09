@@ -7,27 +7,27 @@ import (
 	"k8s.io/client-go/rest"
 )
 
-type Interface interface {
-	Pods(namespace string) ResticPodsInterface
-	DeamonSet(namespace string) ResticDaemonSetInterface
+type ResticInterface interface {
+	PodsGetter
+	DaemonSetsGetter
 }
 
-type Clientset struct {
+type ResticClient struct {
 	corev1Client *corev1client.CoreV1Client
 	appsv1Client *appsv1client.AppsV1Client
 }
 
-func (v *Clientset) Pods(namespace string) ResticPodsInterface {
+func (v *ResticClient) Pods(namespace string) ResticPodsInterface {
 	// select Velero pod with this label
 	return newDefaultResticPods(v.corev1Client.Pods(namespace))
 }
 
-func (v *Clientset) DeamonSet(namespace string) ResticDaemonSetInterface {
+func (v *ResticClient) DeamonSet(namespace string) ResticDaemonSetInterface {
 	// select Velero pod with this label
 	return newDefaultResticDaemonSet(v.appsv1Client.DaemonSets(namespace))
 }
 
-func NewForConfig(c *rest.Config) (*Clientset, error) {
+func NewForConfig(c *rest.Config) (*ResticClient, error) {
 	configShallowCopy := *c
 
 	if configShallowCopy.UserAgent == "" {
@@ -35,7 +35,7 @@ func NewForConfig(c *rest.Config) (*Clientset, error) {
 	}
 
 	// share the transport between all clients
-	var cs Clientset
+	var cs ResticClient
 	kubernetesClient, err := kubernetes.NewForConfig(&configShallowCopy)
 	if err != nil {
 		return nil, err

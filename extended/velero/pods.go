@@ -10,6 +10,10 @@ import (
 	corev1client "k8s.io/client-go/kubernetes/typed/core/v1"
 )
 
+type PodsGetter interface {
+	Pods(namespace string) VeleroPodsInterface
+}
+
 type VeleroPodsInterface interface {
 	common.PodsExpansionInterface
 }
