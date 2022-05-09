@@ -19,8 +19,8 @@ import (
 var once sync.Once
 var oadpclient *Clientset
 
-type Interface interface {
-	VeleroClient() veleroexpansion.Interface
+type VeleroV1Interface interface {
+	VeleroClient() veleroexpansion.VeleroV1Interface
 	SnapshotClient() snapshotclientset.Interface
 	OcpConfigV1Client() configv1.Interface
 	SecClient() secv1.SecurityV1Interface
@@ -30,7 +30,7 @@ type Interface interface {
 
 type Clientset struct {
 	configv1Client *configv1.Clientset
-	veleroclient   *veleroexpansion.Clientset
+	veleroclient   *veleroexpansion.VeleroV1Client
 	snapshotClient *snapshotclientset.Clientset
 	*oadpv1alpha1.OadpV1alpha1Client
 }
@@ -39,7 +39,7 @@ func (c *Clientset) SnapshotClient() snapshotclientset.Interface {
 	return c.snapshotClient
 }
 
-func (c *Clientset) VeleroClient() veleroexpansion.Interface {
+func (c *Clientset) VeleroClient() veleroexpansion.VeleroV1Interface {
 	return c.veleroclient
 }
 

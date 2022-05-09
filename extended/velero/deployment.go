@@ -7,6 +7,10 @@ import (
 	appsv1client "k8s.io/client-go/kubernetes/typed/apps/v1"
 )
 
+type DeploymentsGetter interface {
+	Deployments(namespace string) VeleroDeploymentInterface
+}
+
 type VeleroDeploymentInterface interface {
 	common.DeploymentExpansionInterface
 }

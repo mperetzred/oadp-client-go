@@ -5,7 +5,8 @@ import (
 )
 
 type SnapshotV1Interface interface {
-	VolumeSnapshotClass() VeleroVolumeSnapshotClassInterface
+	VolumeSnapshotClassGetter
+	VolumeSnapshotGetter
 }
 
 type SnapshotV1Client struct {
@@ -15,4 +16,9 @@ type SnapshotV1Client struct {
 func (v *SnapshotV1Client) VolumeSnapshotClass() VeleroVolumeSnapshotClassInterface {
 	// select Velero pod with this label
 	return newDefaultVolumeSnapshotClass(v.VolumeSnapshotClasses())
+}
+
+func (v *SnapshotV1Client) VolumeSnapshot(namespace string) VeleroVolumeSnapshotInterface {
+	// select Velero pod with this label
+	return newDefaultVolumeSnapshot(v.VolumeSnapshots(namespace))
 }

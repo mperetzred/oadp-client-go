@@ -10,6 +10,12 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// BackupsGetter has a method to return a BackupInterface.
+// A group's client should implement this interface.
+type BackupsGetter interface {
+	BackupExpansion(namespace string) BackupExpansionInterface
+}
+
 type BackupExpansionInterface interface {
 	IsBackupDone(name string) (bool, error)
 	velerov1client.BackupInterface
