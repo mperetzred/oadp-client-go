@@ -1,7 +1,7 @@
 package v1beta1
 
 import (
-	snapshot "github.com/kubernetes-csi/external-snapshotter/client/v6/clientset/versioned/typed/volumesnapshot/v1beta1"
+	snapshot "github.com/kubernetes-csi/external-snapshotter/client/v4/clientset/versioned/typed/volumesnapshot/v1beta1"
 )
 
 type SnapshotV1beta1Interface interface {

@@ -1,7 +1,7 @@
 package versioned
 
 import (
-	snapshotclientset "github.com/kubernetes-csi/external-snapshotter/client/v6/clientset/versioned"
+	snapshotclientset "github.com/kubernetes-csi/external-snapshotter/client/v4/clientset/versioned"
 	snapshotV1 "github.com/mperetzred/oadp-client-go/extended/velero/snapshot/v1"
 	snapshotV1beta1 "github.com/mperetzred/oadp-client-go/extended/velero/snapshot/v1beta1"
 	"k8s.io/client-go/rest"
