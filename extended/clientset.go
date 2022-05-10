@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"sync"
 
-	snapshotclientset "github.com/kubernetes-csi/external-snapshotter/client/v6/clientset/versioned"
 	veleroexpansion "github.com/mperetzred/oadp-client-go/extended/velero"
 	oadpv1alpha1 "github.com/mperetzred/oadp-client-go/generated/oadp/clientset/versioned/typed/v1alpha1"
 	configv1 "github.com/openshift/client-go/config/clientset/versioned"
@@ -21,7 +20,6 @@ var oadpclient *Clientset
 
 type VeleroV1Interface interface {
 	VeleroClient() veleroexpansion.VeleroV1Interface
-	SnapshotClient() snapshotclientset.Interface
 	OcpConfigV1Client() configv1.Interface
 	SecClient() secv1.SecurityV1Interface
 	OperatorClient() operators.Interface
@@ -31,12 +29,7 @@ type VeleroV1Interface interface {
 type Clientset struct {
 	configv1Client *configv1.Clientset
 	veleroclient   *veleroexpansion.VeleroV1Client
-	snapshotClient *snapshotclientset.Clientset
 	*oadpv1alpha1.OadpV1alpha1Client
-}
-
-func (c *Clientset) SnapshotClient() snapshotclientset.Interface {
-	return c.snapshotClient
 }
 
 func (c *Clientset) VeleroClient() veleroexpansion.VeleroV1Interface {
