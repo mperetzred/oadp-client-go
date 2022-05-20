@@ -12,8 +12,18 @@ import (
 type VeleroV1Interface interface {
 	PodsGetter
 	DeploymentsGetter
+	BackupsGetter
+	RestoresGetter
+	velerov1.BackupStorageLocationsGetter
+	velerov1.DeleteBackupRequestsGetter
+	velerov1.DownloadRequestsGetter
+	velerov1.PodVolumeBackupsGetter
+	velerov1.PodVolumeRestoresGetter
+	velerov1.ResticRepositoriesGetter
+	velerov1.SchedulesGetter
+	velerov1.ServerStatusRequestsGetter
+	velerov1.VolumeSnapshotLocationsGetter
 	Snapshot() snapshot.Interface
-	velerov1.VeleroV1Interface // extends velerov1.VeleroV1Interface
 }
 
 type VeleroV1Client struct {
@@ -21,7 +31,6 @@ type VeleroV1Client struct {
 	appsv1Client   *appsv1client.AppsV1Client
 	snapshotClient *snapshot.Clientset
 	velerov1Client *velerov1.VeleroV1Client
-	*velerov1.VeleroV1Client
 }
 
 func (v *VeleroV1Client) Pods(namespace string) PodInterface {
@@ -39,14 +48,50 @@ func (v *VeleroV1Client) Snapshot() snapshot.Interface {
 	return v.snapshotClient
 }
 
-func (v *VeleroV1Client) Backups(namespace string) velerov1.BackupInterface {
+func (v *VeleroV1Client) Backups(namespace string) BackupExpansionInterface {
 	// select Velero pod with this label
 	return newBackupExpansion(v.velerov1Client.Backups(namespace))
 }
 
-func (v *VeleroV1Client) Restores(namespace string) velerov1.RestoreInterface {
+func (v *VeleroV1Client) Restores(namespace string) RestoreExpansionInterface {
 	// select Velero pod with this label
 	return newRestoreExpansion(v.velerov1Client.Restores(namespace))
+}
+
+func (c *VeleroV1Client) BackupStorageLocations(namespace string) velerov1.BackupStorageLocationInterface {
+	return c.velerov1Client.BackupStorageLocations(namespace)
+}
+
+func (c *VeleroV1Client) DeleteBackupRequests(namespace string) velerov1.DeleteBackupRequestInterface {
+	return c.velerov1Client.DeleteBackupRequests(namespace)
+}
+
+func (c *VeleroV1Client) DownloadRequests(namespace string) velerov1.DownloadRequestInterface {
+	return c.velerov1Client.DownloadRequests(namespace)
+}
+
+func (c *VeleroV1Client) PodVolumeBackups(namespace string) velerov1.PodVolumeBackupInterface {
+	return c.velerov1Client.PodVolumeBackups(namespace)
+}
+
+func (c *VeleroV1Client) PodVolumeRestores(namespace string) velerov1.PodVolumeRestoreInterface {
+	return c.velerov1Client.PodVolumeRestores(namespace)
+}
+
+func (c *VeleroV1Client) ResticRepositories(namespace string) velerov1.ResticRepositoryInterface {
+	return c.velerov1Client.ResticRepositories(namespace)
+}
+
+func (c *VeleroV1Client) Schedules(namespace string) velerov1.ScheduleInterface {
+	return c.velerov1Client.Schedules(namespace)
+}
+
+func (c *VeleroV1Client) ServerStatusRequests(namespace string) velerov1.ServerStatusRequestInterface {
+	return c.velerov1Client.ServerStatusRequests(namespace)
+}
+
+func (c *VeleroV1Client) VolumeSnapshotLocations(namespace string) velerov1.VolumeSnapshotLocationInterface {
+	return c.velerov1Client.VolumeSnapshotLocations(namespace)
 }
 
 func NewForConfig(c *rest.Config) (*VeleroV1Client, error) {
@@ -71,7 +116,7 @@ func NewForConfig(c *rest.Config) (*VeleroV1Client, error) {
 		return nil, err
 	}
 
-	cs.VeleroV1Client, err = velerov1.NewForConfig(&configShallowCopy)
+	cs.velerov1Client, err = velerov1.NewForConfig(&configShallowCopy)
 	if err != nil {
 		return nil, err
 	}

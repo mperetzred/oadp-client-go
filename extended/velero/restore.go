@@ -12,7 +12,7 @@ import (
 
 // RestoresGetter has a method to return a RestoreExpansionInterface.
 // A group's client should implement this interface.
-type RestoresExpansionGetter interface {
+type RestoresGetter interface {
 	Restores(namespace string) RestoreExpansionInterface
 }
 
