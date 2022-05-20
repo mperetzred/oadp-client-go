@@ -6,9 +6,7 @@ require k8s.io/client-go v0.23.6
 
 require (
 	github.com/kubernetes-csi/external-snapshotter/client/v4 v4.0.0
-	github.com/openshift/client-go v0.0.0-20211209144617-7385dd6338e3
 	github.com/openshift/oadp-operator v0.3.1-0.20220303202209-c5293b18ecf6
-	github.com/operator-framework/operator-lifecycle-manager v0.21.1
 	github.com/vmware-tanzu/velero v1.8.1
 	k8s.io/api v0.23.6
 	k8s.io/apimachinery v0.23.6
@@ -17,12 +15,10 @@ require (
 )
 
 require (
-	github.com/blang/semver/v4 v4.0.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/evanphx/json-patch v4.12.0+incompatible // indirect
 	github.com/go-logr/logr v1.2.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
-	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/go-cmp v0.5.6 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
@@ -31,10 +27,7 @@ require (
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
-	github.com/openshift/api v0.0.0-20211209135129-c58d9f695577 // indirect
-	github.com/operator-framework/api v0.14.1-0.20220413143725-33310d6154f3 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
-	github.com/sirupsen/logrus v1.8.1 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	golang.org/x/net v0.0.0-20220225172249-27dd8689420f // indirect
 	golang.org/x/oauth2 v0.0.0-20210819190943-2bc19b11175f // indirect
