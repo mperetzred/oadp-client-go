@@ -10,8 +10,15 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// RestoresGetter has a method to return a RestoreExpansionInterface.
+// A group's client should implement this interface.
+type RestoresExpansionGetter interface {
+	Restores(namespace string) RestoreExpansionInterface
+}
+
 type RestoreExpansionInterface interface {
 	IsRestoreDone(name string) (bool, error)
+	IsRestoreCompletedSuccessfully(name string) (bool, error)
 	velerov1client.RestoreInterface
 }
 

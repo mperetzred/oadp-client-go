@@ -13,11 +13,12 @@ import (
 // BackupsGetter has a method to return a BackupInterface.
 // A group's client should implement this interface.
 type BackupsGetter interface {
-	BackupExpansion(namespace string) BackupExpansionInterface
+	Backups(namespace string) BackupExpansionInterface
 }
 
 type BackupExpansionInterface interface {
 	IsBackupDone(name string) (bool, error)
+	IsBackupCompletedSuccessfully(name string) (bool, error)
 	velerov1client.BackupInterface
 }
 

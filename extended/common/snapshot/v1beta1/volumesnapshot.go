@@ -11,14 +11,14 @@ import (
 )
 
 type VolumeSnapshotExpantionInterface interface {
-	IsVolumeSnapshotReadyToUse(voulmeSnapshot *v1beta1.VolumeSnapshot) (bool, error)
+	IsReadyToUse(voulmeSnapshot *v1beta1.VolumeSnapshot) (bool, error)
 }
 
 type VolumeSnapshotExpantion struct {
 	snapshotv1beta1.VolumeSnapshotInterface
 }
 
-func (vs *VolumeSnapshotExpantion) IsVolumeSnapshotReadyToUse(voulmeSnapshot *v1beta1.VolumeSnapshot) (bool, error) {
+func (vs *VolumeSnapshotExpantion) IsReadyToUse(voulmeSnapshot *v1beta1.VolumeSnapshot) (bool, error) {
 	log.Printf("Checking if volumesnapshot is ready to use...")
 
 	volumeSnapshot, err := vs.Get(context.Background(), voulmeSnapshot.Name, metav1.GetOptions{})

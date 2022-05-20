@@ -7,9 +7,8 @@ import (
 
 	veleroexpansion "github.com/mperetzred/oadp-client-go/extended/velero"
 	oadpv1alpha1 "github.com/mperetzred/oadp-client-go/generated/oadp/clientset/versioned/typed/v1alpha1"
-	configv1 "github.com/openshift/client-go/config/clientset/versioned"
-	secv1 "github.com/openshift/client-go/security/clientset/versioned/typed/security/v1"
-	operators "github.com/operator-framework/operator-lifecycle-manager/pkg/api/client/clientset/versioned"
+
+	//operators "github.com/operator-framework/operator-lifecycle-manager/pkg/api/client/clientset/versioned"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/util/flowcontrol"
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
@@ -18,26 +17,18 @@ import (
 var once sync.Once
 var oadpclient *Clientset
 
-type VeleroV1Interface interface {
+type Interface interface {
 	VeleroClient() veleroexpansion.VeleroV1Interface
-	OcpConfigV1Client() configv1.Interface
-	SecClient() secv1.SecurityV1Interface
-	OperatorClient() operators.Interface
 	oadpv1alpha1.OadpV1alpha1Interface
 }
 
 type Clientset struct {
-	configv1Client *configv1.Clientset
-	veleroclient   *veleroexpansion.VeleroV1Client
+	veleroclient *veleroexpansion.VeleroV1Client
 	*oadpv1alpha1.OadpV1alpha1Client
 }
 
 func (c *Clientset) VeleroClient() veleroexpansion.VeleroV1Interface {
 	return c.veleroclient
-}
-
-func (c *Clientset) OcpConfigV1Client() configv1.Interface {
-	return c.configv1Client
 }
 
 func NewForConfig(c *rest.Config) (*Clientset, error) {
@@ -65,20 +56,20 @@ func NewForConfigAndClient(c *rest.Config, httpClient *http.Client) (*Clientset,
 		configShallowCopy.RateLimiter = flowcontrol.NewTokenBucketRateLimiter(configShallowCopy.QPS, configShallowCopy.Burst)
 	}
 
-	var cs Clientset
-	var err error
-
-	cs.veleroclient, err = veleroexpansion.NewForConfig(&configShallowCopy)
+	veleroclient, err := veleroexpansion.NewForConfig(&configShallowCopy)
 	if err != nil {
 		return nil, err
 	}
 
-	cs.OadpV1alpha1Client, err = oadpv1alpha1.NewForConfigAndClient(&configShallowCopy, httpClient)
+	oadpclient, err := oadpv1alpha1.NewForConfigAndClient(&configShallowCopy, httpClient)
 	if err != nil {
 		return nil, err
 	}
 
-	return &cs, nil
+	return &Clientset{
+		veleroclient,
+		oadpclient,
+	}, nil
 }
 
 // NewForConfigOrDie creates a new Clientset for the given config and

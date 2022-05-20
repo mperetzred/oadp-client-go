@@ -12,7 +12,6 @@ import (
 type VeleroV1Interface interface {
 	PodsGetter
 	DeploymentsGetter
-	BackupsGetter
 	Snapshot() snapshot.Interface
 	velerov1.VeleroV1Interface // extends velerov1.VeleroV1Interface
 }
@@ -21,17 +20,18 @@ type VeleroV1Client struct {
 	corev1Client   *corev1client.CoreV1Client
 	appsv1Client   *appsv1client.AppsV1Client
 	snapshotClient *snapshot.Clientset
+	velerov1Client *velerov1.VeleroV1Client
 	*velerov1.VeleroV1Client
 }
 
-func (v *VeleroV1Client) Pods(namespace string) VeleroPodsInterface {
+func (v *VeleroV1Client) Pods(namespace string) PodInterface {
 	// select Velero pod with this label
-	return newDefaultVeleroPods(v.corev1Client.Pods(namespace))
+	return newPods(v.corev1Client, namespace)
 }
 
-func (v *VeleroV1Client) Deployments(namespace string) VeleroDeploymentInterface {
+func (v *VeleroV1Client) Deployments(namespace string) DeploymentInterface {
 	// select Velero pod with this label
-	return newDefaultVeleroDeployment(v.appsv1Client.Deployments(namespace))
+	return newDeployments(v.appsv1Client, namespace)
 }
 
 func (v *VeleroV1Client) Snapshot() snapshot.Interface {
@@ -39,14 +39,14 @@ func (v *VeleroV1Client) Snapshot() snapshot.Interface {
 	return v.snapshotClient
 }
 
-func (v *VeleroV1Client) BackupExpansion(namespace string) BackupExpansionInterface {
+func (v *VeleroV1Client) Backups(namespace string) velerov1.BackupInterface {
 	// select Velero pod with this label
-	return newBackupExpansion(v.Backups(namespace))
+	return newBackupExpansion(v.velerov1Client.Backups(namespace))
 }
 
-func (v *VeleroV1Client) RestoreExpansion(namespace string) RestoreExpansionInterface {
+func (v *VeleroV1Client) Restores(namespace string) velerov1.RestoreInterface {
 	// select Velero pod with this label
-	return newRestoreExpansion(v.Restores(namespace))
+	return newRestoreExpansion(v.velerov1Client.Restores(namespace))
 }
 
 func NewForConfig(c *rest.Config) (*VeleroV1Client, error) {
